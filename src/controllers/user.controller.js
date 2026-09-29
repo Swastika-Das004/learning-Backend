@@ -1,6 +1,7 @@
 //import { response } from "express";
 import {asyncHandler} from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js"
+import { User } from "../models/user.model.js";
 
 const registerUser = asyncHandler ( async(req, res) => {
     // get user details from frontend
@@ -33,6 +34,14 @@ const registerUser = asyncHandler ( async(req, res) => {
 
        throw new ApiError(400, "@ must be used")
     }  
+
+    // checking if user already exits or not
+    const existedUser = User.findOne({
+        $or: [{email} , {username}]
+    })
+    if (existedUser){
+        throw new ApiError(409, "username or email already exists")
+    }
     
 } )
 
