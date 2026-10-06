@@ -38,7 +38,7 @@ const registerUser = asyncHandler ( async(req, res) => {
     }  
 
     // checking if user already exits or not
-    const existedUser = User.findOne({
+    const existedUser =await User.findOne({
         $or: [{email} , {username}]
     })
     if (existedUser){
@@ -60,7 +60,12 @@ const registerUser = asyncHandler ( async(req, res) => {
 
     //uploading images in cloudinary:
     const avatar = await uploadOnCloudinary(avatarLocalPath)
+
+    console.log("avatar result:", avatar)
+
     const coverImage = await uploadOnCloudinary(coverImageLocalPath)
+
+    console.log("COVER RESULT:", coverImage)
 
     // again checking if avatar is succesfully came or not beacuse avatar is a required field
     if(!avatar) {
