@@ -20,7 +20,7 @@ const registerUser = asyncHandler ( async(req, res) => {
     //getting user details
 
     const {fullname , email, username, password} = req.body
-    console.log("email: ", email);
+    //console.log("email: ", email);
 
 //    if (fullname ===""){
 //        throw new ApiError(400, "fullname is required")
@@ -50,15 +50,21 @@ const registerUser = asyncHandler ( async(req, res) => {
 
     // image handling
     const avatarLocalPath = req.files?.avatar[0]?.path
-    const coverImageLocalPath = req.files?.coverImage[0]?.path
+    //const coverImageLocalPath = req.files?.coverImage[0]?.path
 
     if(!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required")
     }
     //cover image is not so necessary
-    if(!coverImageLocalPath) {
-        throw new ApiError(401, "cover image file is required")
-    }
+    //if(!coverImageLocalPath) {
+        //throw new ApiError(401, "cover image file is required")
+    //}
+
+    // handling cover image so we don't get the error of "cann't read properties of undefined[0]" if someone doesn't give cover image 
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path
+    } 
 
 
     //uploading images in cloudinary:
