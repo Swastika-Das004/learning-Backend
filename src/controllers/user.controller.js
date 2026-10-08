@@ -110,4 +110,42 @@ const registerUser = asyncHandler ( async(req, res) => {
 } )
 
 
-export {registerUser}
+// login section
+
+const loginUser = asyncHandler(async (req , res) => {
+
+    // req body -> data
+    // username or email
+    // find the user
+    // password check
+    // access and refresh token
+    // send cookie
+
+
+    // taking data from req.body
+
+    const {username, email, password} = req.body
+
+    if(!(username || email)) {
+        throw new ApiError (400 , "username or email is required")
+    }
+
+    // through $or operator it will search in DB on the basis of username or email according to our frontend . here we are trying to balance with both of the matter without knowing our frontend is taking which fields for login
+
+    const user = await User.findOne({
+        $or: [{username}, {email}]
+    })
+
+    // if user is not in our DB 
+    if(!user) {
+        throw new ApiError (404 , "user doesn't exist")
+    }
+
+
+})
+
+
+export {
+    registerUser,
+    loginUser
+}
