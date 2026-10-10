@@ -110,6 +110,7 @@ const registerUser = asyncHandler ( async(req, res) => {
 } )
 
 
+
 // login section
 
 const loginUser = asyncHandler(async (req , res) => {
@@ -141,6 +142,16 @@ const loginUser = asyncHandler(async (req , res) => {
         throw new ApiError (404 , "user doesn't exist")
     }
 
+
+    // password checking 
+
+    const isPasswordValid = await user.isPasswordCorrect(password)
+    if(!isPasswordValid) {
+        throw new ApiError (401 , "Password incorrect") // or we can say " invalid user credentials"
+    }
+
+
+    // now if user's password is also right then create access and refresh token.
 
 })
 
