@@ -5,6 +5,28 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
+
+
+//    creating method for generating accesstoken and refresh token
+
+const generateAccessAndRefreshToken = async(userId) => {
+    try {
+        const user = await User.findById(userId)
+        const accessToken = user.generateAccessToken()
+        const refreshToken = user.generateRefreshToken()
+
+        //now saving the user's refresh token in our DB so user don't have to put password everytime
+        user.refreshToken = refreshToken
+        await user.save({validateBeforeSave: false})
+
+        return {accessToken, refreshToken}
+
+    } catch (error) {
+        throw new ApiError(500 , "Something went wrong while generating refresh and access token")
+    }
+}
+
+
 const registerUser = asyncHandler ( async(req, res) => {
     // get user details from frontend
     // validation - if the email is filled up by the user or is all fields are fillep up or not let's say through not empty
@@ -152,6 +174,14 @@ const loginUser = asyncHandler(async (req , res) => {
 
 
     // now if user's password is also right then create access and refresh token.
+    // calling the generateAccessAndRefreshToken()
+
+    const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user._id)
+
+    
+    // filtering user info that we will send to frontend
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
+
 
 })
 

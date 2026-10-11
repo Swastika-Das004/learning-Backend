@@ -66,7 +66,7 @@ userSchema.methods.isPasswordCorrect = async function(password){
 
 // just like other methods we can also create customized ethods on accessing token and refreshing token.
 
-userSchema.methods.genearteAccessToken = function(){
+userSchema.methods.generateAccessToken = function(){
     // defining the payloads which are gonna be used by token.
     return jwt.sign(
         {
@@ -81,7 +81,7 @@ userSchema.methods.genearteAccessToken = function(){
         }
     )
 }
-userSchema.methods.genearteRefreshToken = function(){
+userSchema.methods.generateRefreshToken = function(){
     return jwt.sign(
         {
             _id: this._id
