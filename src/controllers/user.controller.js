@@ -182,6 +182,27 @@ const loginUser = asyncHandler(async (req , res) => {
     // filtering user info that we will send to frontend
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
+    // sending cookies
+    const options = {
+        httpOnly: true,
+        secure: true
+
+    }
+
+    // returning response
+    return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                user: loggedInUser, accessToken, refreshToken
+            },
+            "user logged in successfully"
+        )
+    )
 
 })
 
